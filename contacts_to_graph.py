@@ -5,6 +5,7 @@
 import numpy as np
 import scipy
 from scipy import sparse
+from numpy import linalg
 import itertools
 import pandas as pd
 import os
@@ -13,14 +14,15 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import subprocess
 import Bio
+from Bio.PDB.ResidueDepth import ResidueDepth, get_surface
 from Bio.PDB.PDBParser import PDBParser
 
 # name PDB file variables
-# PDB_ID = '1URR'
 PDB_ID = sys.argv[1]
-store_directory = './structures/%s' % PDB_ID
-if not os.path.exists(store_directory):
-    os.makedirs(store_directory)
+if ".csv" in PDB_ID:
+    csv = pd.read_csv(PDB_ID, names=["PDB ID"])
+
+store_directory = 'structures/%s' % PDB_ID
 if not os.path.exists(store_directory):
     os.makedirs(store_directory)
 file_URL = "https://files.rcsb.org/download/%s.pdb" % (PDB_ID)
@@ -67,7 +69,6 @@ def plot_adj_matrix(adj_mat):
     plt.xlabel("Atom Index")
     plt.title(plot_title)
     plt.show()
-
 plot_adj_matrix(adj_matrix)
 
 # generate graph from adjacency matrix
@@ -83,11 +84,10 @@ def show_graph_no_labels(adj_matrix, mylabels=None):
     nx.draw_networkx_edges(graph, pos, alpha=0.3)
     nx.draw_networkx_nodes(graph, pos, **options)
     plt.title(plot_title)
-    plt.savefig(("%s/%s_contact_graph.png") % (PDB_ID, PDB_ID), dpi=300)
+    plt.savefig(("structures/%s/%s_contact_graph.png") % (PDB_ID, PDB_ID), dpi=300)
     plt.show()
 
     return graph
-
 graph = show_graph_no_labels(adj_matrix,  atoms_dict.items())
 
 # color graph by residue number
@@ -105,9 +105,8 @@ def show_graph_aa_color(graph):
     plt.colorbar(nc)
     plt.axis('off')
     plt.title(plot_title)
-    plt.savefig(("%s/%s_contact_graph_aa_idx.png") % (PDB_ID, PDB_ID), dpi=300)
+    plt.savefig(("structures/%s/%s_contact_graph_aa_idx.png") % (PDB_ID, PDB_ID), dpi=300)
     plt.show()
-
 show_graph_aa_color(graph)
 
 # color graph by residue depth
@@ -117,9 +116,9 @@ show_graph_aa_color(graph)
 # rd = Bio.PDB.ResidueDepth(model)
 # print(rd['A',(' ', 152, ' ')])
 
-#
+# K-means cluster graph and visualize
+
 # # get eigenvalues of graph laplacian
-#
 # def get_laplacian(A):
 #     n,m = A.shape
 #     diags = A.sum(axis=1)
@@ -132,11 +131,19 @@ show_graph_aa_color(graph)
 #
 # vals, vecs = scipy.sparse.linalg.eigs(lap)
 #
-# sorted(vecs[-2]
+# len(vecs)
+# len(vals)
+#
+#
+# my_least = sorted(vecs[4])
+# plt.plot(my_least)
 #
 #
 # vals
 # vecs[:, 0]
+# vecs
+#
+# plt.plot(my_least)
 #
 # # other algorithms to identify communities in network
 # G = graph
@@ -162,3 +169,33 @@ show_graph_aa_color(graph)
 # #         print poly.get_phi_psi_list()
 #
 # # find conductance
+#
+# # calculate residue ResidueDepth
+# parser = PDBParser()
+# structure = parser.get_structure(PDB_ID, local_PDB_file)
+# model = structure[0]
+# rd = ResidueDepth(model)
+# print(rd['A',(' ', 152, ' ')])
+#
+# surface = get_surface(model)
+
+# Visualize structures
+import __main__
+__main__.pymol_argv = [ 'pymol', '-qc'] # Quiet and no GUI
+
+import sys, time, os
+import pymol
+# Load Structures
+pymol.finish_launching()
+
+# Read User Input
+spath = os.path.abspath('1URR.pdb')
+# spath = "/opt/anaconda3/PyMOL.app"
+sname = spath.split('/')[-1].split('.')[0]
+
+pymol.cmd.load(spath, sname)
+pymol.cmd.disable("all")
+pymol.cmd.enable(sname)
+pymol.cmd.png("my_image.png")
+
+pymol.cmd.quit()
