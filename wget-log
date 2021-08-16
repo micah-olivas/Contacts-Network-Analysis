@@ -1,0 +1,11 @@
+--2021-08-16 15:00:43--  https://files.rcsb.org/download/1URR.pdb
+Resolving files.rcsb.org (files.rcsb.org)... 132.249.210.234
+Connecting to files.rcsb.org (files.rcsb.org)|132.249.210.234|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/octet-stream]
+Saving to: ‘structures/1URR/1URR.pdb’
+
+structures/1URR/1UR     [<=>                 ]       0  --.-KB/s               structures/1URR/1UR     [ <=>                ] 174.58K  --.-KB/s    in 0.1s    
+
+2021-08-16 15:00:43 (1.29 MB/s) - ‘structures/1URR/1URR.pdb’ saved [178767]
+
