@@ -1,4 +1,4 @@
-# total_frames:1 beg:0 end:0 stride:1 interaction_types:hp,sb,pc,ps,ts,vdw,hb
+# total_frames:1 beg:0 end:0 stride: interaction_types:hp,sb,pc,ps,ts,vdw,hb
 # Columns: frame, interaction_type, atom_1, atom_2[, atom_3[, atom_4]]
 0	sb	A:ASP:95:OD2	A:LYS:97:NZ
 0	sb	A:ARG:32:NH2	A:GLU:29:OE2

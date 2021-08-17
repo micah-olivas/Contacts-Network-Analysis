@@ -16,9 +16,10 @@ import subprocess
 from Bio.PDB.DSSP import DSSP
 from Bio.PDB.DSSP import dssp_dict_from_pdb_file
 
-
 # name PDB file variables
-PDB_ID = sys.argv[1]
+# PDB_ID = sys.argv[1]
+PDB_ID = '1A28'
+
 if ".csv" in PDB_ID:
     csv = pd.read_csv(PDB_ID, names=["PDB ID"])
 
@@ -29,19 +30,17 @@ file_URL = "https://files.rcsb.org/download/%s.pdb" % (PDB_ID)
 local_PDB_file = "structures/%s/%s.pdb" % (PDB_ID, PDB_ID)
 local_contacts_file = "structures/%s/%s_contacts.tsv" % (PDB_ID, PDB_ID)
 
-
 # download pdb file and generate contacts tsv
 bashCommand = "wget -O %s %s" % (local_PDB_file, file_URL)
 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
 bashCommand = "get_static_contacts.py --structure %s --itypes all --output %s" % (local_PDB_file, local_contacts_file)
+! python ~/getcontacts/$bashCommand
 process = subprocess.run(bashCommand.split(), stdout=subprocess.PIPE)
-
 
 # import contacts list
 contacts = pd.read_csv(local_contacts_file, sep = '\t', skiprows=[0, 1], names = ['frame', 'i_type', 'node_1', 'node_2'])
 contacts = pd.read_csv('/Users/micaholivas/Desktop/Contacts-Network-Analysis/%s' % local_contacts_file, sep = '\t', skiprows=[0, 1], names = ['frame', 'i_type', 'node_1', 'node_2'])
-
 
 # generate atom, residue, and dssp dictionaries
 def generate_adj_matrix(contacts):
@@ -123,7 +122,7 @@ def show_graph_res_order_color(graph, pos):
     plt.show()
 show_graph_res_order_color(graph, pos)
 
-# color graph by residue depth
+# color graph by area accessible to solvent (asa)
 def show_graph_asa_color(graph, pos):
     aa_idxs = set(nx.get_node_attributes(graph,'asa').values())
     mapping = dict(zip(sorted(aa_idxs), itertools.count()))

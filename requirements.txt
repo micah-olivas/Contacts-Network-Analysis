@@ -1,0 +1,16 @@
+Bio
+DSSP
+cython
+expat
+itertools
+matplotlib
+networkx
+numpy
+os
+pandas
+scikit-learn
+scipy
+seaborn
+subprocess
+sys
+vmd-python

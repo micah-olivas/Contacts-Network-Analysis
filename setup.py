@@ -10,6 +10,6 @@ setup(
 	author = 'Micah Olivas',
 	author_email = '',
 	description = 'Contacts Network Analysis',
-	packages = find_packages(),    
+	packages = find_packages(),
 	install_requires = requirements,
 )
