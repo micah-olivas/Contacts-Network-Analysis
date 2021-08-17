@@ -12,3 +12,4 @@ setup(
 	description = 'Contacts Network Analysis',
 	packages = find_packages(),    
 	install_requires = requirements,
+)
